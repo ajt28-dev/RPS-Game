@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 import random
-from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer, RTCConfiguration
 
 # --- Import our custom modules ---
 from video_processor import RpsTransformer
@@ -228,6 +228,14 @@ with hud_col3:
         value=f"{st.session_state.user_score} - {st.session_state.computer_score}",
         delta=f"First to 3 wins!"
     )
+RTC_CONFIGURATION = RTCConfiguration({
+    "iceServers": [
+        {"urls": ["stun:stun.l.google.com:19302"]},
+        {"urls": ["stun:stun1.l.google.com:19302"]},
+        {"urls": ["stun:stun2.l.google.com:19302"]},
+    ]
+})
+
 
 st.markdown("---")
 
@@ -235,10 +243,14 @@ st.markdown("---")
 st.markdown("<h2>📹 Live Camera Feed</h2>", unsafe_allow_html=True)
 st.markdown('<div class="custom-card">', unsafe_allow_html=True)
 ctx = webrtc_streamer(
-    key="rps",
+    key="rps-game",
     video_transformer_factory=RpsTransformer,
+    rtc_configuration=RTC_CONFIGURATION,  # Add this line
     media_stream_constraints={"video": True, "audio": False},
+    async_processing=True,
 )
+
+
 st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Game Control Buttons ---
