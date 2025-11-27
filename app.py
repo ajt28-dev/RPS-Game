@@ -244,8 +244,8 @@ st.markdown("<h2>📹 Live Camera Feed</h2>", unsafe_allow_html=True)
 st.markdown('<div class="custom-card">', unsafe_allow_html=True)
 ctx = webrtc_streamer(
     key="rps-game",
-    video_transformer_factory=RpsTransformer,
-    rtc_configuration=RTC_CONFIGURATION,  # Add this line
+    video_processor_factory=RpsTransformer,
+    rtc_configuration=RTC_CONFIGURATION,
     media_stream_constraints={"video": True, "audio": False},
     async_processing=True,
 )
@@ -260,7 +260,7 @@ with col1:
     # Start Round button with countdown timer
     start_disabled = st.session_state.timer_active or st.session_state.game_over
     if st.button("🚀 Start Round (5s)", disabled=start_disabled, use_container_width=True):
-        if ctx.video_transformer:
+        if ctx.video_processor:
             # Activate the countdown timer
             st.session_state.timer_active = True
             st.session_state.end_time = time.time() + 5.0
@@ -279,8 +279,8 @@ with col2:
         st.session_state.captured_user_move = "N/A"
         st.session_state.captured_ai_move = "N/A"
         # Reset AI move display on video
-        if ctx.video_transformer:
-            ctx.video_transformer.ai_move = "Waiting..."
+        if ctx.video_processor:
+            ctx.video_processor.ai_move = "Waiting..."
         st.rerun()
 
 # ========== TIMER LOGIC - COUNTDOWN & AUTO-PLAY ==========
@@ -294,15 +294,15 @@ if st.session_state.timer_active:
         # Timer expired - execute the round
         st.session_state.timer_active = False
         
-        if ctx.video_transformer:
-            user_move = ctx.video_transformer.user_move
+        if ctx.video_processor:
+            user_move = ctx.video_processor.user_move
             
             if user_move != "None":
                 # Play the round using game logic
                 play_round(user_move)
                 
-                # Update the video transformer's AI move display
-                ctx.video_transformer.ai_move = st.session_state.computer_move_display
+                # Update the video processor's AI move display
+                ctx.video_processor.ai_move = st.session_state.computer_move_display
                 
                 # Update countdown result
                 st.session_state.countdown_result = st.session_state.last_result

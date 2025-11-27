@@ -1,7 +1,8 @@
 import cv2
 import mediapipe as mp
-from streamlit_webrtc import VideoTransformerBase
+from streamlit_webrtc import VideoProcessorBase
 import streamlit as st
+import av
 
 # --- Import our custom classifier module ---
 import hand_classifier
@@ -15,12 +16,12 @@ hands = mp_hands.Hands(
 )
 mp_draw = mp.solutions.drawing_utils
 
-class RpsTransformer(VideoTransformerBase):
+class RpsTransformer(VideoProcessorBase):
     def __init__(self):
         self.user_move = "None"
         self.ai_move = "Waiting..."
 
-    def transform(self, frame):
+    def recv(self, frame):
         img = frame.to_ndarray(format="bgr24")
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = hands.process(img_rgb)
@@ -64,4 +65,4 @@ class RpsTransformer(VideoTransformerBase):
                     (text_x, 40), cv2.FONT_HERSHEY_SIMPLEX, 
                     0.8, (0, 255, 255), 2, cv2.LINE_AA)  # Cyan color for AI
         
-        return img
+        return av.VideoFrame.from_ndarray(img, format="bgr24")
