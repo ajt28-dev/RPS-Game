@@ -173,7 +173,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- App Title and Credits ---
-st.markdown("<h1>🎮 Human Pose Estimation for RPS</h1>", unsafe_allow_html=True)
+st.markdown("<h1>🎮 ROCK PAPER SCISSORS - A COMPUTER VISION GAME</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; font-size: 1.1rem; color: #888;'>By: Nicolei Faith Abot and Adlei Jed Tan</p>", unsafe_allow_html=True)
 st.markdown("---")
 
