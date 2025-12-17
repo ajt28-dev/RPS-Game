@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import mediapipe.solutions
 from streamlit_webrtc import VideoProcessorBase
 import streamlit as st
 import av
@@ -8,14 +9,14 @@ import av
 import hand_classifier
 
 # --- MediaPipe Setup ---
-mp_hands = mp.solutions.hands
+mp_hands = mediapipe.solutions.hands
 hands = mp_hands.Hands(
     static_image_mode=True,  # Treat each frame independently to avoid timestamp issues
     max_num_hands=1,
     min_detection_confidence=0.7,
     min_tracking_confidence=0.5
 )
-mp_draw = mp.solutions.drawing_utils
+mp_draw = mediapipe.solutions.drawing_utils
 
 class RpsTransformer(VideoProcessorBase):
     def __init__(self):
